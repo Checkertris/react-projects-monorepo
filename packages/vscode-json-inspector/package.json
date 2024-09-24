@@ -1,0 +1,37 @@
+{
+    "name": "vscode-json-inspector",
+    "publisher": "Winnie Liu",
+    "version": "1.0.0",
+    "engines": {
+        "vscode": "^1.75.0"
+    },
+    "main": "./dist/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.sayHello",
+                "title": "Hello World"
+            }
+        ]
+    },
+    "scripts": {
+        "watch": "concurrently \"npm run watch:esbuild\"  \"npm run watch:tsc\" ",
+        "watch:esbuild": "node esbuild.js --watch",
+        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+        "compile": "npm run check-types && node  esbuild.js ",
+        "check-types": "tsc --noEmit",
+        "start:webview": "cd webview-ui && vite",
+        "build:webview": "cd webview-ui && vite build",
+        "preview:webview": "cd webview-ui && vite preview",
+        "vscode:prepublish": "npm run package",
+        "package": "npm run check-types && node esbuild.js --production"
+    },
+    "dependencies": {
+        "@common/utils": "^1.0.0",
+        "@common/components": "^1.0.0",
+        "@common/schema-hook-form": "^1.0.0",
+        "@vscode/webview-ui-toolkit": "^1.2.2",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2"
+    }
+}

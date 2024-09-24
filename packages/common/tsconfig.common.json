@@ -1,0 +1,9 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "module": "ESNext", // tsc Specify what module code is generated.
+        "moduleResolution": "Bundler",
+        "declaration": true, // tsc(library) Generate .d.ts files from TypeScript and JavaScript files in your project.
+        "sourceMap": true // tsc Create source map files for emitted JavaScript files.
+    }
+}
