@@ -1,8 +1,0 @@
-{
-    "extends": "../tsconfig.base.json",
-    "compilerOptions": {
-        "module": "Preserve", // bundler Specify what module code is generated.
-        "moduleResolution": "Bundler", // bundler Specify how TypeScript looks up a file from a given module specifier. ,
-        "noEmit": true // bundler Disable emitting files from a compilation.
-    }
-}

@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run VSCode Json Inspector",
+            "type": "extensionHost",
+            "request": "launch",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode-json-inspector"
+            ],
+            "outFiles": ["${workspaceFolder}/packages/vscode-json-inspector/dist/**/*.js"],
+            "preLaunchTask": "vscode-json-inspector - build & watch"
+        }
+    ]
+}

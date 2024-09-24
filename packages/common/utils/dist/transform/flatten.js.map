@@ -1,1 +1,0 @@
-{"version":3,"file":"flatten.js","sourceRoot":"","sources":["../../src/transform/flatten.ts"],"names":[],"mappings":"AAAA,MAAM,UAAU,OAAO,CAAI,KAAY;IACnC,OAAO,KAAK,CAAC,MAAM,CAAC,CAAC,IAAI,EAAE,IAAI,EAAE,EAAE,CAAC,IAAI,CAAC,MAAM,CAAC,IAAI,CAAC,EAAE,EAAE,CAAC,CAAA;AAC9D,CAAC"}
