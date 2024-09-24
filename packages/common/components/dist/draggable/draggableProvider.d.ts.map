@@ -1,1 +1,0 @@
-{"version":3,"file":"draggableProvider.d.ts","sourceRoot":"","sources":["../../src/draggable/draggableProvider.tsx"],"names":[],"mappings":"AAGA,MAAM,WAAW,sBAAsB;IACnC,MAAM,EAAE,CAAC,IAAI,EAAE,MAAM,EAAE,EAAE,EAAE,MAAM,KAAK,IAAI,CAAA;IAC1C,QAAQ,EAAE,GAAG,CAAC,OAAO,CAAA;CACxB;AAED,eAAO,MAAM,iBAAiB,yBAA0B,sBAAsB,4CAQ7E,CAAA"}
