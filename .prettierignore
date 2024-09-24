@@ -1,0 +1,8 @@
+# Dependency directories
+node_modules/
+
+#generated output
+dist
+
+#base tsconfig
+tsconfig.base.json
