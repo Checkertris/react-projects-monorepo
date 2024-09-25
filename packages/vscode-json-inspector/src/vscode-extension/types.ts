@@ -1,11 +1,13 @@
-import vscode from 'vscode'
-
-export interface FileInfo {
-    type: vscode.FileType | 'rootFolder'
-    uri: vscode.Uri
-    name: string
+export enum Origin {
+    WebviewProvider,
+    WebviewApp,
 }
 
-export type FileQuickpick = vscode.QuickPickItem & FileInfo
-
-export type AppMessage = { type: 'app-ready' }
+export interface Message {
+    type: string
+    data?: unknown
+    origin: {
+        type: Origin
+        id?: string
+    }
+}

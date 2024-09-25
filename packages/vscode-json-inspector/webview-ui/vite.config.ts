@@ -15,7 +15,7 @@ export default defineConfig({
 
         rollupOptions: {
             input: {
-                main: fileURLToPath(new URL('./src/main/index.tsx', import.meta.url)),
+                config: fileURLToPath(new URL('./src/config/index.tsx', import.meta.url)),
             },
             output: {
                 entryFileNames: `views/[name].js`,

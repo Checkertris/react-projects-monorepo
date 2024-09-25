@@ -1,5 +1,6 @@
 {
     "name": "@common/utils",
     "version": "1.0.0",
-    "main": "dist/index.js"
+    "main": "dist/index.js",
+    "private": true
 }

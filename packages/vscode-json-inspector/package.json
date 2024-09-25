@@ -2,6 +2,7 @@
     "name": "vscode-json-inspector",
     "publisher": "Winnie Liu",
     "version": "1.0.0",
+    "private": true,
     "engines": {
         "vscode": "^1.75.0"
     },
@@ -9,8 +10,8 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.sayHello",
-                "title": "Hello World"
+                "command": "jsonInspector.setServiceFolder",
+                "title": "Set Service Folder"
             }
         ]
     },

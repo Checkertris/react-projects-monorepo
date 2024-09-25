@@ -1,30 +1,43 @@
-import vscode from 'vscode'
-import * as extension from '~/vscode-extension'
-import { CREATE_REF_FOLDER_COMMAND, DEFAULT_IGNORE } from '~/constants'
-import { JsonInspectorContext } from '../workspaceState'
+import {
+    SET_SERVICE_FOLDER_COMMAND,
+    SERVICE_FOLDER_NAME,
+    OUTPUT_FOLDER_NAME,
+    SCHEMA_FOLDER_NAME,
+} from 'static'
+import { CommandSchema, editWorkspace, getAllWorkspaceFolders } from '~/vscode-extension'
+import { Uri, window, workspace } from 'vscode'
+import { FileItem } from '~/vscode-extension/fileItem'
+import { JsonInspectorHandle } from '~/extension'
 
-export async function setRefFolderCommand() {
-    if (vscode.workspace.workspaceFolders) {
-        const input = vscode.window.createQuickPick<extension.FileQuickpick>()
+export const setServiceFolderCommand = new CommandSchema(SET_SERVICE_FOLDER_COMMAND, async () => {
+    if (workspace.workspaceFolders) {
+        const input = window.createQuickPick<FileItem>()
         input.placeholder = 'Select an existing path to initialise source folder...'
-        await extension
-            .readWorkspaceFolders({
-                ignore: DEFAULT_IGNORE,
-                type: vscode.FileType.Directory,
-            })
-            .then((folders) => (input.items = extension.fileInfoToQuickpickItems(folders)))
-
+        input.items = await getAllWorkspaceFolders()
         input.onDidAccept(() => {
-            if (input.selectedItems.length === 1 && input.selectedItems[0]) {
-                JsonInspectorContext.setReferenceFolderPath(input.selectedItems[0].uri.toString())
-                vscode.commands.executeCommand(CREATE_REF_FOLDER_COMMAND)
+            if (input.selectedItems[0]) {
+                const uri = input.selectedItems[0].uri
+                JsonInspectorHandle.setServiceFolderPath(uri)
+                editWorkspace(
+                    [
+                        {
+                            type: 'folder',
+                            uri: Uri.joinPath(uri, SERVICE_FOLDER_NAME, OUTPUT_FOLDER_NAME),
+                        },
+                        {
+                            type: 'folder',
+                            uri: Uri.joinPath(uri, SERVICE_FOLDER_NAME, SCHEMA_FOLDER_NAME),
+                        },
+                    ],
+                    true
+                )
             } else {
-                vscode.window.showErrorMessage('create source folder action cancelled')
+                window.showErrorMessage('create source folder action cancelled')
             }
             input.hide()
         })
         input.show()
     } else {
-        vscode.window.showErrorMessage('unable to set source folder path, open a workspace first.')
+        window.showErrorMessage('No Workspace detected, unable to set Folder Path.')
     }
-}
+})

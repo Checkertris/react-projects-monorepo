@@ -1,24 +1,11 @@
 {
-    "folders": [
-        {
-            "name": "✨ react-projects",
-            "path": ".",
-        },
-        {
-            "name": "📦 @common/components",
-            "path": "packages/common/components",
-        },
-        {
-            "name": "📦 @common/schema-hook-form",
-            "path": "packages/common/schema-hook-form",
-        },
-        {
-            "name": "📦 @common/utils",
-            "path": "packages/common/utils",
-        },
-        {
-            "name": "📦 vscode-json-inspector",
-            "path": "packages/vscode-json-inspector",
-        },
-    ],
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../Desktop/resources"
+		}
+	],
+	"settings": {}
 }

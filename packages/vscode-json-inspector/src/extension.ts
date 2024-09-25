@@ -1,53 +1,27 @@
-import vscode from 'vscode'
-import * as extension from '~/vscode-extension'
+import { SERVICE_FOLDER_URI_STATE } from 'static'
+import { commands, ExtensionContext, Uri, window } from 'vscode'
+import { ExtensionHandle } from '~/vscode-extension'
+import { ConfigurationViewProvider, setServiceFolderCommand } from './json-inspector'
 
-import {
-    CONFIGURATION_VIEW,
-    CREATE_REF_FOLDER_COMMAND,
-    INITIALISE_WORKSPACE_COMMAND,
-    SET_REF_FOLDER_COMMAND,
-} from '~/constants'
-import {
-    createRefFolderCommand,
-    initialiseWorkspaceCommand,
-    setRefFolderCommand,
-    ConfigurationViewProvider,
-} from '~/json-inspector'
-
-const EXTENSION_COMMANDS = {
-    [CREATE_REF_FOLDER_COMMAND]: createRefFolderCommand,
-    [SET_REF_FOLDER_COMMAND]: setRefFolderCommand,
-    [INITIALISE_WORKSPACE_COMMAND]: initialiseWorkspaceCommand,
-}
-
-const WEBVIEW_PROVIDERS = {
-    [CONFIGURATION_VIEW]: ConfigurationViewProvider,
-}
-
-// const DIAGNOSTIC_COLLECTIONS = {
-//     [EXSTENSION_DIAGNOSTIC_COLLECTION]: FormEditorDiagnosticConfig,
-// }
-
-export function activate(context: vscode.ExtensionContext) {
-    const disposables: vscode.Disposable[] = []
-    context.subscriptions.push(
-        new vscode.Disposable(() => vscode.Disposable.from(...disposables).dispose())
-    )
-
-    vscode.commands.registerCommand('extension.sayHello', () => {
-        vscode.window.showInformationMessage('Hello World TEST TES TEST!')
+export function activate(context: ExtensionContext) {
+    commands.registerCommand('extension.sayHello', () => {
+        window.showInformationMessage('Hello World TEST TES TEST!')
     })
 
-    disposables.push(
-        vscode.window.registerWebviewViewProvider(
-            CONFIGURATION_VIEW,
-            new ConfigurationViewProvider(context)
-        )
-    )
+    JsonInspectorHandle.activate(context)
+}
 
-    // disposables.push(ExstensionCommands.register(context, EXTENSION_COMMANDS))
+export class JsonInspectorHandle extends ExtensionHandle {
+    public static override activate(context: ExtensionContext) {
+        ExtensionHandle.activate(context)
+        this.registerCommand(setServiceFolderCommand)
+        this.registerWebviewProvider(ConfigurationViewProvider)
+    }
+    public static getServiceFolderPath(): Uri | undefined {
+        return this.context().workspaceState.get(SERVICE_FOLDER_URI_STATE)
+    }
 
-    // disposables.push(ExstensionWebviewProviders.register(context, WEBVIEW_PROVIDERS))
-
-    // disposables.push(ExstensionDiagnostics.register(context, DIAGNOSTIC_COLLECTIONS))
+    public static setServiceFolderPath(uri: Uri) {
+        this.context().workspaceState.update(SERVICE_FOLDER_URI_STATE, uri)
+    }
 }

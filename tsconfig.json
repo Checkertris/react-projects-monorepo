@@ -3,6 +3,7 @@
     "references": [
         { "path": "./packages/common/utils" },
         { "path": "./packages/common/components" },
-        { "path": "./packages/common/schema-hook-form" }
+        { "path": "./packages/common/schema-hook-form" },
+        { "path": "./packages/vscode-json-inspector" }
     ]
 }

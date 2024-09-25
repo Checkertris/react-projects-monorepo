@@ -1,5 +1,5 @@
 export * from './types'
 export * from './utils'
-export * from './context'
-export * from './diagnosticCollection'
+export * from './extensionHandle'
 export * from './webview'
+export * from './commandSchema'

@@ -9,7 +9,7 @@
             "~/*": ["src/*"]
         }
     },
-    "include": ["src/**/*.ts", "src/**/*.tsx"],
+    "include": ["src/**/*.ts", "src/**/*.tsx", "static/**/*.ts"],
     "references": [
         { "path": "../common/utils" },
         { "path": "../common/components" },

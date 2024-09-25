@@ -1,2 +1,1 @@
-export * from './webviewPanelInstance'
-export * from './webviewProvider'
+export * from './baseWebviewProvider'

@@ -11,6 +11,7 @@ export default [
     pluginReact.configs.flat.recommended,
     {
         rules: {
+            '@typescript-eslint/naming-convention': 'error',
             'react/react-in-jsx-scope': 0,
             'react/jsx-uses-react': 0,
             '@typescript-eslint/no-unused-vars': [

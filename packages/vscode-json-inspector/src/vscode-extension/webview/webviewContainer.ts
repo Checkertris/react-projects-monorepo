@@ -1,78 +1,90 @@
-import vscode from 'vscode'
-import * as extension from '~/vscode-extension'
+import { disposeAndClear, getNonce } from '../utils'
+import { Message, Origin } from '../types'
+import {
+    ExtensionContext,
+    Uri,
+    Webview,
+    WebviewPanel,
+    WebviewView,
+    Disposable,
+    window,
+} from 'vscode'
 
-function getUri(webview: vscode.Webview, extensionUri: vscode.Uri, pathList: string[]) {
-    return webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, ...pathList))
+function getUri(webview: Webview, extensionUri: Uri, pathList: string[]) {
+    return webview.asWebviewUri(Uri.joinPath(extensionUri, ...pathList))
 }
 
-export abstract class WebviewContainer<
-    C extends vscode.WebviewPanel | vscode.WebviewView,
-    R extends { type: string; data?: unknown } = { type: string; data?: unknown },
-    D extends { type: string; data?: unknown } = { type: string; data?: unknown },
-> {
+export abstract class WebviewContainer<C extends WebviewPanel | WebviewView> {
     protected viewContainer?: C
 
     constructor(
-        protected readonly extensionContext: vscode.ExtensionContext,
-        public readonly index: string
+        public readonly viewIndex: string,
+        private readonly context: ExtensionContext,
+        private readonly listeners: ((message: Message) => void)[]
     ) {}
 
+    protected abstract onWebviewStart(webviewView: C): Disposable[]
+
+    public abstract onDidReceiveMessage(message: Message): void
+
+    protected postMessage(type: string, data?: unknown) {
+        const message = {
+            type,
+            data,
+            origin: { type: Origin.WebviewProvider, id: this.viewIndex },
+        }
+        this.activateListeners(message)
+        if (this.viewContainer?.webview) this.viewContainer.webview.postMessage(message)
+        else window.showInformationMessage('no view container present')
+    }
+
     protected setAndStartWebview(viewContainer: C) {
-        const disposables: vscode.Disposable[] = []
+        const disposables: Disposable[] = []
 
         this.viewContainer = viewContainer
         this.viewContainer.webview.html = this.getWebviewHtml(this.viewContainer.webview)
 
-        disposables.push(
-            this.viewContainer.webview.onDidReceiveMessage(this.onReceiveAppMessage.bind(this))
-        )
         disposables.concat(this.onWebviewStart(this.viewContainer))
-
-        this.viewContainer.onDidDispose(() => {}, {}, disposables)
+        disposables.push(
+            this.viewContainer.webview.onDidReceiveMessage(this.activateListeners.bind(this))
+        )
+        this.viewContainer.onDidDispose(() => disposeAndClear(disposables))
     }
 
-    protected abstract onReceiveAppMessage(message: R | extension.AppMessage): void
-
-    protected abstract onWebviewStart(webviewView: C): vscode.Disposable[]
-
-    protected postAppMessage(message: D) {
-        if (this.viewContainer?.webview) {
-            this.viewContainer.webview.postMessage(message)
-        }
+    private activateListeners(message: Message) {
+        this.listeners.forEach((listener) => listener(message))
     }
 
-    protected getWebviewHtml(webview: vscode.Webview) {
-        const stylesUri = getUri(webview, this.extensionContext.extensionUri, [
+    private getWebviewHtml(webview: Webview) {
+        const stylesUri = getUri(webview, this.context.extensionUri, [
             'webview-ui',
             'build',
             'assets',
-            `${this.index}.css`,
+            `${this.viewIndex}.css`,
         ])
-        const codiconFontUri = getUri(webview, this.extensionContext.extensionUri, [
+        const codiconFontUri = getUri(webview, this.context.extensionUri, [
             'webview-ui',
             'build',
             'assets',
             'codicon.ttf',
         ])
-        const scriptUri = getUri(webview, this.extensionContext.extensionUri, [
+        const scriptUri = getUri(webview, this.context.extensionUri, [
             'webview-ui',
             'build',
             'views',
-            `${this.index}.js`,
+            `${this.viewIndex}.js`,
         ])
 
-        const nonce = extension.getNonce()
+        const nonce = getNonce()
 
-        /* eslint no-console: "error" */
         console.log('webview data: ', {
-            index: this.index,
+            index: this.viewIndex,
             stylesUri: stylesUri.toString(),
             codiconFontUri: codiconFontUri.toString(),
             scriptUri: scriptUri.toString(),
             nonce,
         })
 
-        /* eslint-disable  @typescript-eslint/restrict-template-expressions */
         return `
           <!DOCTYPE html>
           <html lang="en">
@@ -81,7 +93,7 @@ export abstract class WebviewContainer<
               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
               <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'nonce-${nonce}'; font-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
               <link rel="stylesheet" type="text/css" href="${stylesUri}">
-              <title>${this.index}</title>
+              <title>${this.viewIndex}</title>
               <style nonce="${nonce}">
                 @font-face {
                   font-family: "codicon";
