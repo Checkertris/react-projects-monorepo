@@ -2,7 +2,7 @@ import { DiagnosticSchema } from './diagnosticCollection/diagnosticSchema'
 import { CommandSchema } from './commandSchema'
 import { BaseWebviewProvider } from './webview'
 import { disposeAndClear } from './utils'
-import { Message } from './types'
+import { Message } from '../../shared/types'
 import { commands, Disposable, ExtensionContext, languages, window } from 'vscode'
 
 export abstract class ExtensionHandle {
@@ -59,6 +59,6 @@ export abstract class ExtensionHandle {
     ) {
         const provider = new constructor(this.context(), this._webviewListeners)
         window.registerWebviewViewProvider(provider.contributeId, provider)
-        this._webviewListeners.push(provider.onDidReceiveMessage)
+        this._webviewListeners.push(provider.onDidReceiveMessage.bind(provider))
     }
 }

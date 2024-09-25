@@ -1,6 +1,6 @@
 export enum Origin {
-    WebviewProvider,
-    WebviewApp,
+    WebviewProvider = 'WEBVIEW_PROVIDER',
+    WebviewApp = 'WEBVIEW_APP',
 }
 
 export interface Message {

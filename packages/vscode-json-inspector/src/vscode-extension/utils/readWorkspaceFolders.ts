@@ -1,7 +1,7 @@
 import { FileType, Uri, workspace } from 'vscode'
 import * as utils from '@common/utils'
 import { FileItem } from '../fileItem'
-import { DEFAULT_IGNORE } from 'static'
+import { DEFAULT_IGNORE } from 'shared'
 
 interface ReadDirectoryOptions {
     ignore?: string[]

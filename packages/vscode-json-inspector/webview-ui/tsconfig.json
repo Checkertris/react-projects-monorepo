@@ -1,11 +1,12 @@
 {
     "extends": "../../../tsconfig.base.json",
     "compilerOptions": {
+        "lib": ["DOM", "DOM.Iterable", "ES2022"],
         "moduleResolution": "node",
         "baseUrl": ".",
         "paths": {
             "~/*": ["src/*"]
         }
     },
-    "include": ["src/**/*.ts", "src/**/*.tsx", "../src/**/*.ts", "../static/**/*.ts"]
+    "include": ["src/**/*.ts", "src/**/*.tsx", "../src/**/*.ts", "../shared/**/*.ts"]
 }

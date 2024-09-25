@@ -34,23 +34,26 @@
         }
     },
     "scripts": {
-        "watch": "concurrently \"npm run watch:esbuild\"  \"npm run watch:tsc\" ",
+        "watch": "concurrently \"npm run watch:webview\" \"npm run watch:esbuild\" \"npm run watch:tsc\"",
         "watch:esbuild": "node esbuild.js --watch",
         "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
         "compile": "npm run check-types && node  esbuild.js ",
         "check-types": "tsc --noEmit",
         "start:webview": "cd webview-ui && vite",
         "build:webview": "cd webview-ui && vite build",
+        "watch:webview": "cd webview-ui && vite build --watch",
         "preview:webview": "cd webview-ui && vite preview",
         "vscode:prepublish": "npm run package",
         "package": "npm run check-types && node esbuild.js --production"
     },
     "dependencies": {
-        "@common/utils": "^1.0.0",
         "@common/components": "^1.0.0",
         "@common/schema-hook-form": "^1.0.0",
+        "@common/utils": "^1.0.0",
         "@vscode/webview-ui-toolkit": "^1.2.2",
+        "class-variance-authority": "^0.7.0",
         "react": "^17.0.2",
-        "react-dom": "^17.0.2"
+        "react-dom": "^17.0.2",
+        "tailwind-merge": "^2.5.2"
     }
 }

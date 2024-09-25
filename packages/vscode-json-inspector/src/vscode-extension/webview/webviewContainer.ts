@@ -1,5 +1,5 @@
 import { disposeAndClear, getNonce } from '../utils'
-import { Message, Origin } from '../types'
+import { Message, Origin } from '../../../shared/types'
 import {
     ExtensionContext,
     Uri,
@@ -9,7 +9,7 @@ import {
     Disposable,
     window,
 } from 'vscode'
-import { APP_READY_MESSAGE, SET_APP_INDEX_MESSAGE } from 'static'
+import { APP_READY_MESSAGE, SET_APP_INDEX_MESSAGE } from 'shared'
 
 function getUri(webview: Webview, extensionUri: Uri, pathList: string[]) {
     return webview.asWebviewUri(Uri.joinPath(extensionUri, ...pathList))
@@ -36,7 +36,6 @@ export abstract class WebviewContainer<C extends WebviewPanel | WebviewView> {
         }
         this.activateListeners(message)
         if (this.viewContainer?.webview) this.viewContainer.webview.postMessage(message)
-        else window.showInformationMessage('no view container present')
     }
 
     protected setAndStartWebview(viewContainer: C) {
@@ -60,6 +59,7 @@ export abstract class WebviewContainer<C extends WebviewPanel | WebviewView> {
 
     private activateListeners(message: Message) {
         this.listeners.forEach((listener) => listener(message))
+        console.log('message activated from ' + this.viewIndex + ': ', message)
     }
 
     private getWebviewHtml(webview: Webview) {

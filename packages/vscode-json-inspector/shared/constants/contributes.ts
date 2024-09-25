@@ -1,4 +1,5 @@
 export const SET_SERVICE_FOLDER_COMMAND = 'jsonInspector.setServiceFolder'
+export const OPEN_WORKSPACE_COMMAND = 'jsonInspector.openWorkspace'
 
 export const CONFIGURATION_VIEW = 'jsonInspector.configView'
 export const EDITOR_VIEW = 'jsonInspector.editorView'

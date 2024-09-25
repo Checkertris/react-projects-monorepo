@@ -1,11 +1,12 @@
 {
 	"folders": [
 		{
+			"name": "✨ react-projects",
 			"path": "."
 		},
 		{
-			"path": "../../Desktop/resources"
+			"name": "📦 vscode-json-inspector",
+			"path": "packages/vscode-json-inspector"
 		}
-	],
-	"settings": {}
+	]
 }

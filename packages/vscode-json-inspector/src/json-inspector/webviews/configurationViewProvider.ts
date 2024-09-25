@@ -1,4 +1,11 @@
-import { ExtensionContext, FileSystemWatcher, WebviewView, workspace, Disposable } from 'vscode'
+import {
+    ExtensionContext,
+    FileSystemWatcher,
+    WebviewView,
+    workspace,
+    Disposable,
+    window,
+} from 'vscode'
 import {
     JSON_SCHEMA_FILE_TYPE,
     SERVICE_FOLDER_NAME,
@@ -8,45 +15,49 @@ import {
     HAS_WORKSPACE_MESSAGE,
     NEW_PATH_MESSAGE,
     CONFIGURATION_VIEW_INDEX,
-} from 'static'
+    OPEN_WORKSPACE_COMMAND,
+} from 'shared'
 import { BaseWebviewProvider, ExtensionHandle, Message } from '~/vscode-extension'
 import { JsonInspectorHandle } from '~/extension'
+import { asWorkspacePath } from '~/vscode-extension/utils/asWorkspacePath'
 
 export class ConfigurationViewProvider extends BaseWebviewProvider {
     private folderWatcher?: FileSystemWatcher | undefined
+
     constructor(context: ExtensionContext, listeners: ((message: Message) => void)[]) {
         super(CONFIGURATION_VIEW, CONFIGURATION_VIEW_INDEX, context, listeners)
     }
 
     onWebviewStart(webviewView: WebviewView): Disposable[] {
         const disposables: Disposable[] = []
+        ExtensionHandle.addCommandListener(OPEN_WORKSPACE_COMMAND, this.onHasWorkspace.bind(this))
         ExtensionHandle.addCommandListener(SET_SERVICE_FOLDER_COMMAND, this.onPathChange.bind(this))
         disposables.push(webviewView.onDidChangeVisibility(this.onHasWorkspace.bind(this)))
         disposables.push(workspace.onDidChangeWorkspaceFolders(this.onHasWorkspace.bind(this)))
         return disposables
-        return []
     }
+
     public override onDidReceiveMessage(message: Message) {
         switch (message.type) {
             case APP_READY_MESSAGE:
                 this.onHasWorkspace()
-                // this.onFolderChange()
                 this.onPathChange()
                 return
         }
     }
+
     private onHasWorkspace() {
+        console.log('workpsace name:', workspace.name)
         this.postMessage(HAS_WORKSPACE_MESSAGE, !!workspace.name)
     }
 
     private onPathChange() {
-        const path = JsonInspectorHandle.getServiceFolderPath()
-        this.postMessage(NEW_PATH_MESSAGE, path)
-
         if (this.folderWatcher) this.folderWatcher.dispose()
-        if (path) {
+        const uri = JsonInspectorHandle.getServiceFolderUri()
+        if (uri) {
+            this.postMessage(NEW_PATH_MESSAGE, asWorkspacePath(uri))
             this.folderWatcher = workspace.createFileSystemWatcher(
-                path + '/' + SERVICE_FOLDER_NAME + '/*.' + JSON_SCHEMA_FILE_TYPE
+                uri.path + '/' + SERVICE_FOLDER_NAME + '/*.' + JSON_SCHEMA_FILE_TYPE
             )
             // this.folderWatcher.onDidCreate(this.onFolderChange.bind(this))
             // this.folderWatcher.onDidDelete(this.onFolderChange.bind(this))

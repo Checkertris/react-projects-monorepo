@@ -8,8 +8,6 @@ export default defineConfig({
     resolve: {
         alias: {
             '~': '/src',
-            '@': '../src',
-            static: '../static',
         },
     },
     build: {

@@ -13,7 +13,7 @@ export class FileItem implements QuickPickItem {
         this.type = type
         const tail = uri.fsPath.split('/').pop()
         if (tail) this.name = tail
-        this.label = asWorkspacePath(uri, isRoot)
+        this.label = asWorkspacePath(uri)
         if (isRoot) {
             this.description = '- workspace root'
         }

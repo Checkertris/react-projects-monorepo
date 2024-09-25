@@ -9,7 +9,7 @@
                 "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode-json-inspector"
             ],
             "outFiles": ["${workspaceFolder}/packages/vscode-json-inspector/dist/**/*.js"],
-            "preLaunchTask": "vscode-json-inspector - build & watch"
+            "preLaunchTask": "vscode-json-inspector - watch"
         }
     ]
 }

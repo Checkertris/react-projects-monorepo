@@ -1,5 +1,5 @@
 import { WebviewContainer } from './webviewContainer'
-import { Message } from '../types'
+import { Message } from '../../../shared/types'
 import {
     CancellationToken,
     ExtensionContext,
