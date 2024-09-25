@@ -11,19 +11,11 @@ export class FileItem implements QuickPickItem {
     constructor(uri: Uri, type: FileType, isRoot: boolean = false) {
         this.uri = uri
         this.type = type
-        const tail = uri.path.split('/').pop()
+        const tail = uri.fsPath.split('/').pop()
         if (tail) this.name = tail
-        this.label = asWorkspacePath(uri.path)
+        this.label = asWorkspacePath(uri, isRoot)
         if (isRoot) {
             this.description = '- workspace root'
         }
     }
 }
-
-// function asWorkspacePath(path: string) {
-//     if (workspace.workspaceFolders && workspace.workspaceFolders.length > 1) {
-//         return workspace.asRelativePath(path, true)
-//     } else {
-//         return '/' + workspace.asRelativePath(path, false)
-//     }
-// }

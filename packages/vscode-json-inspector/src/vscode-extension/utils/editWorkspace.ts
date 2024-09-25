@@ -6,10 +6,10 @@ export interface WsEditAction {
     uri: Uri
 }
 
-export function editWorkspace(edits: WsEditAction[], ignoreIfExists: boolean) {
+export async function editWorkspace(edits: WsEditAction[], ignoreIfExists: boolean = true) {
     if (workspace.workspaceFolders) {
         const wsEdit = new WorkspaceEdit()
-        edits.forEach((edit) => {
+        edits.forEach(async (edit) => {
             switch (edit.type) {
                 case 'file':
                     wsEdit.createFile(edit.uri, {
@@ -20,9 +20,17 @@ export function editWorkspace(edits: WsEditAction[], ignoreIfExists: boolean) {
                 case 'folder':
                     workspace.fs.createDirectory(edit.uri)
             }
-            window.showInformationMessage(
-                edit.type + ' created at ' + asWorkspacePath(edit.uri.path)
-            )
+
+            try {
+                await workspace.fs.stat(edit.uri)
+                window.showInformationMessage(
+                    edit.type + ' already exists at ' + asWorkspacePath(edit.uri)
+                )
+            } catch {
+                window.showInformationMessage(
+                    edit.type + ' created at ' + asWorkspacePath(edit.uri)
+                )
+            }
         })
         workspace.applyEdit(wsEdit)
     } else {

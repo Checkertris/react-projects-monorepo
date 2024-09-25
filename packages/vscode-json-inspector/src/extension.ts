@@ -1,6 +1,6 @@
 import { SERVICE_FOLDER_URI_STATE } from 'static'
-import { commands, ExtensionContext, Uri, window } from 'vscode'
-import { ExtensionHandle } from '~/vscode-extension'
+import { commands, Disposable, ExtensionContext, Uri, WebviewView, window, workspace } from 'vscode'
+import { BaseWebviewProvider, ExtensionHandle, Message } from '~/vscode-extension'
 import { ConfigurationViewProvider, setServiceFolderCommand } from './json-inspector'
 
 export function activate(context: ExtensionContext) {
@@ -18,7 +18,10 @@ export class JsonInspectorHandle extends ExtensionHandle {
         this.registerWebviewProvider(ConfigurationViewProvider)
     }
     public static getServiceFolderPath(): Uri | undefined {
-        return this.context().workspaceState.get(SERVICE_FOLDER_URI_STATE)
+        const uri: Uri | undefined = this.context().workspaceState.get(SERVICE_FOLDER_URI_STATE)
+        if (uri) return uri
+        if (workspace.workspaceFolders) return workspace.workspaceFolders[0]?.uri
+        return undefined
     }
 
     public static setServiceFolderPath(uri: Uri) {

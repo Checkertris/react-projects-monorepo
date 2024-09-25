@@ -13,7 +13,25 @@
                 "command": "jsonInspector.setServiceFolder",
                 "title": "Set Service Folder"
             }
-        ]
+        ],
+        "views": {
+            "configuration": [
+                {
+                    "type": "webview",
+                    "id": "jsonInspector.configView",
+                    "name": ""
+                }
+            ]
+        },
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "configuration",
+                    "title": "Json Inspector",
+                    "icon": ""
+                }
+            ]
+        }
     },
     "scripts": {
         "watch": "concurrently \"npm run watch:esbuild\"  \"npm run watch:tsc\" ",

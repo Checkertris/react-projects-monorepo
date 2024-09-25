@@ -9,6 +9,7 @@ import {
     Disposable,
     window,
 } from 'vscode'
+import { APP_READY_MESSAGE, SET_APP_INDEX_MESSAGE } from 'static'
 
 function getUri(webview: Webview, extensionUri: Uri, pathList: string[]) {
     return webview.asWebviewUri(Uri.joinPath(extensionUri, ...pathList))
@@ -48,6 +49,12 @@ export abstract class WebviewContainer<C extends WebviewPanel | WebviewView> {
         disposables.push(
             this.viewContainer.webview.onDidReceiveMessage(this.activateListeners.bind(this))
         )
+        disposables.push(
+            this.viewContainer.webview.onDidReceiveMessage((message) => {
+                if (message.type == APP_READY_MESSAGE)
+                    this.postMessage(SET_APP_INDEX_MESSAGE, this.viewIndex)
+            })
+        )
         this.viewContainer.onDidDispose(() => disposeAndClear(disposables))
     }
 
@@ -58,19 +65,19 @@ export abstract class WebviewContainer<C extends WebviewPanel | WebviewView> {
     private getWebviewHtml(webview: Webview) {
         const stylesUri = getUri(webview, this.context.extensionUri, [
             'webview-ui',
-            'build',
+            'dist',
             'assets',
             `${this.viewIndex}.css`,
         ])
         const codiconFontUri = getUri(webview, this.context.extensionUri, [
             'webview-ui',
-            'build',
+            'dist',
             'assets',
             'codicon.ttf',
         ])
         const scriptUri = getUri(webview, this.context.extensionUri, [
             'webview-ui',
-            'build',
+            'dist',
             'views',
             `${this.viewIndex}.js`,
         ])

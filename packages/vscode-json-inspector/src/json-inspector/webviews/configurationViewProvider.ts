@@ -24,6 +24,7 @@ export class ConfigurationViewProvider extends BaseWebviewProvider {
         disposables.push(webviewView.onDidChangeVisibility(this.onHasWorkspace.bind(this)))
         disposables.push(workspace.onDidChangeWorkspaceFolders(this.onHasWorkspace.bind(this)))
         return disposables
+        return []
     }
     public override onDidReceiveMessage(message: Message) {
         switch (message.type) {
