@@ -1,4 +1,4 @@
-import { DiagnosticSchema } from './diagnosticCollection/diagnosticSchema'
+import { DiagnosticSchema } from './diagnostics/diagnosticSchema'
 import { CommandSchema } from './commandSchema'
 import { BaseWebviewProvider } from './webview'
 import { disposeAndClear } from './utils'
@@ -45,10 +45,10 @@ export abstract class ExtensionHandle {
         )
     }
 
-    protected static registerDiagnosticCollection(diagnostic: DiagnosticSchema) {
-        const collection = languages.createDiagnosticCollection(diagnostic.name)
+    protected static registerDiagnosticCollection(schema: DiagnosticSchema) {
+        const collection = languages.createDiagnosticCollection(schema.name)
         this._disposables.push(collection)
-        this._disposables.concat(diagnostic.apply(collection))
+        this._disposables.concat(schema.apply(collection))
     }
 
     protected static registerWebviewProvider(

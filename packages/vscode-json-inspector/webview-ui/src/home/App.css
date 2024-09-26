@@ -12,12 +12,9 @@ a {
     white-space: nowrap;
 }
 
-.gap {
-    color: transparent;
-}
-
 .button-container {
     display: flex;
+    justify-content: center;
 }
 
 .button-container:hover {

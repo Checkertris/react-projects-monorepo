@@ -10,44 +10,41 @@ import {
     JSON_SCHEMA_FILE_TYPE,
     SERVICE_FOLDER_NAME,
     SET_SERVICE_FOLDER_COMMAND,
-    CONFIGURATION_VIEW,
+    HOME_VIEW,
     APP_READY_MESSAGE,
     HAS_WORKSPACE_MESSAGE,
     NEW_PATH_MESSAGE,
-    CONFIGURATION_VIEW_INDEX,
-    OPEN_WORKSPACE_COMMAND,
+    HOME_VIEW_INDEX,
 } from 'shared'
 import { BaseWebviewProvider, ExtensionHandle, Message } from '~/vscode-extension'
 import { JsonInspectorHandle } from '~/extension'
 import { asWorkspacePath } from '~/vscode-extension/utils/asWorkspacePath'
 
-export class ConfigurationViewProvider extends BaseWebviewProvider {
+export class HomeViewProvider extends BaseWebviewProvider {
     private folderWatcher?: FileSystemWatcher | undefined
 
     constructor(context: ExtensionContext, listeners: ((message: Message) => void)[]) {
-        super(CONFIGURATION_VIEW, CONFIGURATION_VIEW_INDEX, context, listeners)
+        super(HOME_VIEW, HOME_VIEW_INDEX, context, listeners)
     }
 
     onWebviewStart(webviewView: WebviewView): Disposable[] {
         const disposables: Disposable[] = []
-        ExtensionHandle.addCommandListener(OPEN_WORKSPACE_COMMAND, this.onHasWorkspace.bind(this))
         ExtensionHandle.addCommandListener(SET_SERVICE_FOLDER_COMMAND, this.onPathChange.bind(this))
-        disposables.push(webviewView.onDidChangeVisibility(this.onHasWorkspace.bind(this)))
-        disposables.push(workspace.onDidChangeWorkspaceFolders(this.onHasWorkspace.bind(this)))
+        disposables.push(webviewView.onDidChangeVisibility(this.onWorkspaceChange.bind(this)))
+        disposables.push(workspace.onDidChangeWorkspaceFolders(this.onWorkspaceChange.bind(this)))
         return disposables
     }
 
     public override onDidReceiveMessage(message: Message) {
         switch (message.type) {
             case APP_READY_MESSAGE:
-                this.onHasWorkspace()
+                this.onWorkspaceChange()
                 this.onPathChange()
                 return
         }
     }
 
-    private onHasWorkspace() {
-        console.log('workpsace name:', workspace.name)
+    private onWorkspaceChange() {
         this.postMessage(HAS_WORKSPACE_MESSAGE, !!workspace.name)
     }
 

@@ -1,20 +1,20 @@
-import vscode from 'vscode'
+import vscode, { ExtensionContext } from 'vscode'
 import ts from 'typescript'
 import { DefaultExportWatcher } from './lib/defaultExportWatcher'
 import { getRange } from '../utils'
 
-export abstract class DiagnosticSchema {
+export class DiagnosticSchema {
     private collection?: vscode.DiagnosticCollection
     private disposables: vscode.Disposable[] = []
 
     constructor(public readonly name: string) {}
 
-    apply(collection: vscode.DiagnosticCollection) {
+    apply(collection: vscode.DiagnosticCollection, context: ExtensionContext) {
         this.collection = collection
         return this.disposables
     }
 
-    protected registerDefaultExportDiagnostic(
+    public registerDefaultExport(
         fileType: string,
         exportTypeRef: vscode.Uri,
         onValidExport?: (
@@ -27,11 +27,11 @@ export abstract class DiagnosticSchema {
         this.disposables.push(watcher)
 
         if (onValidExport)
-            watcher.onValidExport((uri, node) => {
+            watcher.onValidExport = (uri, node) => {
                 if (this.collection) onValidExport(uri, node, this.collection)
-            })
+            }
 
-        watcher.onLackDefaultExport((uri) => {
+        watcher.onLackExport = (uri) => {
             this.collection?.set(uri, [
                 new vscode.Diagnostic(
                     new vscode.Range(0, 0, 0, 2),
@@ -39,9 +39,9 @@ export abstract class DiagnosticSchema {
                     vscode.DiagnosticSeverity.Error
                 ),
             ])
-        })
+        }
 
-        watcher.onInvalidDefaultExport((uri, node) => {
+        watcher.onInvalidExport = (uri, node) => {
             const range = getRange(uri, node)
             if (range) {
                 this.collection?.set(uri, [
@@ -52,7 +52,7 @@ export abstract class DiagnosticSchema {
                     ),
                 ])
             }
-        })
+        }
         return this
     }
 }

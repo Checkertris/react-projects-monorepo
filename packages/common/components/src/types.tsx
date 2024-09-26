@@ -37,7 +37,7 @@ export type OptionData<T extends PropertyKey = PropertyKey> =
       }
     | 'divider'
 
-export interface BaseSelectProps<T extends PropertyKey, O extends AsynchOptions<T> | OptionData<T>>
+export interface BaseSelectProps<T extends PropertyKey, O extends AsyncOptions<T> | OptionData<T>>
     extends FormFieldProps<T> {
     placeholder?: string | undefined
     emptyMessage?: string | undefined
@@ -58,10 +58,10 @@ export type SelectProps<T extends PropertyKey> = BaseSelectProps<T, OptionData<T
 
 export type AsyncSelectProps<T extends PropertyKey> = BaseSelectProps<
     T,
-    OptionData<T> | AsynchOptions<T>
+    OptionData<T> | AsyncOptions<T>
 >
 
-export interface AsynchOptions<T extends PropertyKey = PropertyKey> {
+export interface AsyncOptions<T extends PropertyKey = PropertyKey> {
     fetch: () => Promise<OptionData<T>[]>
 }
 
@@ -70,37 +70,3 @@ export interface TableProps {
     headers: string[]
     body: JSX.Element[][]
 }
-
-// //Container
-// export interface ContainerProps {
-//     label?: string | undefined
-//     children: ReactNode
-// }
-
-// //Toggle
-// export interface ToggleProps {
-//     defaultOpen?: boolean
-//     children: ReactNode
-// }
-
-// export interface ToggleShellProps {
-//     onClick: () => void
-//     open: boolean
-//     children: ReactNode
-// }
-
-// import type { Expand } from '@common/utils'
-// import { useState } from 'react'
-// import type { ToggleProps, ToggleShellProps } from '~/types'
-
-// export function quickToggle({
-//     defaultOpen,
-//     children,
-// }: Expand<ToggleProps>): Expand<ToggleShellProps> {
-//     const [open, setOpen] = useState<boolean>(defaultOpen ? defaultOpen : false)
-//     return {
-//         open,
-//         onClick: () => setOpen(!open),
-//         children: open && children,
-//     }
-// }

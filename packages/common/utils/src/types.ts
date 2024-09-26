@@ -87,10 +87,6 @@ export type RecordLength<T extends Record<PropertyKey, unknown>> = Extract<
 >
 export type ArrayLength<T extends unknown[]> = T['length']
 
-export type Expand<T extends object> = {
-    [K in keyof T]: T[K]
-} & {}
-
 export type Merge<U extends object> = (U extends unknown ? (K: U) => void : never) extends (
     K: infer I
 ) => void

@@ -1,13 +1,11 @@
 import { SERVICE_FOLDER_URI_STATE } from 'shared'
-import { commands, Disposable, ExtensionContext, Uri, WebviewView, window, workspace } from 'vscode'
-import { BaseWebviewProvider, ExtensionHandle, Message } from '~/vscode-extension'
-import { ConfigurationViewProvider, setServiceFolderCommand } from './json-inspector'
+import { commands, ExtensionContext, Uri, window, workspace } from 'vscode'
+import { ExtensionHandle } from '~/vscode-extension'
+import { setServiceFolderCommand } from './json-inspector/setRefFolderCommand'
+import { HomeViewProvider } from './json-inspector/homeViewProvider'
+import { jsonInspectorProjectDiagnostics } from './json-inspector/diagnostics/jsonInspectorDiagnostics'
 
 export function activate(context: ExtensionContext) {
-    commands.registerCommand('extension.sayHello', () => {
-        window.showInformationMessage('Hello World TEST TES TEST!')
-    })
-
     JsonInspectorHandle.activate(context)
 }
 
@@ -15,8 +13,8 @@ export class JsonInspectorHandle extends ExtensionHandle {
     public static override activate(context: ExtensionContext) {
         ExtensionHandle.activate(context)
         this.registerCommand(setServiceFolderCommand)
-
-        this.registerWebviewProvider(ConfigurationViewProvider)
+        this.registerWebviewProvider(HomeViewProvider)
+        this.registerDiagnosticCollection(jsonInspectorProjectDiagnostics)
     }
     public static getServiceFolderUri(): Uri | undefined {
         const uri: Uri | undefined = this.context().workspaceState.get(SERVICE_FOLDER_URI_STATE)

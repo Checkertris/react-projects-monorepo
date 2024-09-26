@@ -7,9 +7,7 @@ import {
     SET_SERVICE_FOLDER_COMMAND,
 } from '../../../shared'
 import { useHandleWebviewMessages } from '~/lib/hooks/useHandleWebviewMessages'
-
-import { CommandButton } from '~/lib/ui/components'
-import { Gap } from '~/lib/ui/components/gap'
+import { CommandButton } from '~/lib/ui/components/commandButton'
 
 function App() {
     const [hasWorkspace, setHasWorkspace] = useState<boolean>(true)
@@ -27,7 +25,7 @@ function App() {
 
     return (
         <div>
-            {!hasWorkspace && (
+            {hasWorkspace && (
                 <>
                     <p>No Workspace detected, open a folder to get started.</p>
                     <CommandButton command_id='workbench.action.files.openFileFolder'>

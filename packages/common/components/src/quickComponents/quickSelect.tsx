@@ -1,14 +1,13 @@
-import type { Expand } from '@common/utils'
 import type { OptionData, SelectOptionProps, SelectProps, SelectTriggerProps } from '~/types'
 
 export function quickSelect<P extends object>(
-    trigger: (props: Expand<SelectTriggerProps & P>) => JSX.Element,
-    option: (props: Expand<SelectOptionProps>) => JSX.Element,
+    trigger: (props: SelectTriggerProps & P) => JSX.Element,
+    option: (props: SelectOptionProps) => JSX.Element,
     divider: JSX.Element
 ) {
     const Trigger = trigger
     const Option = option
-    const Comp = <T extends PropertyKey>(props: Expand<SelectProps<T>> & P) => {
+    const Comp = <T extends PropertyKey>(props: SelectProps<T> & P) => {
         return (
             <Trigger
                 {...props}

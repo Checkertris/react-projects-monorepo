@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { isExtends } from '@common/utils'
-import type { OptionData, AsynchOptions } from '~/types'
+import type { OptionData, AsyncOptions } from '~/types'
 
-export function useAsycOptions<T extends PropertyKey>(
+export function useAsyncOptions<T extends PropertyKey>(
     loadingIcon: JSX.Element,
-    options: (OptionData<T> | AsynchOptions<T>)[]
+    options: (OptionData<T> | AsyncOptions<T>)[]
 ): { options: OptionData<T>[]; onClick: () => void } {
     const [currentOptions, setOptions] = useState<OptionData<T>[]>([])
     const refresh = useRef(async () => {
         setOptions(
             options.map((option) => {
-                if (isExtends<AsynchOptions>(option))
+                if (isExtends<AsyncOptions>(option))
                     return {
                         label: 'loading...',
                         value: '' as T,
@@ -23,7 +23,7 @@ export function useAsycOptions<T extends PropertyKey>(
         let newOptions: OptionData<T>[] = []
         await Promise.all(
             options.map(async (option) => {
-                if (isExtends<AsynchOptions>(option)) {
+                if (isExtends<AsyncOptions>(option)) {
                     await option
                         .fetch()
                         .then((options) => (newOptions = newOptions.concat(options)))

@@ -1,4 +1,3 @@
-import type { Expand } from '@common/utils'
 import type { ReactNode } from 'react'
 import type { TableProps } from '~/types'
 
@@ -12,7 +11,7 @@ export function quickTable(
     const Header = header
     const Cell = cell
     const Row = row
-    const Comp = ({ headers, body }: Expand<TableProps>) => (
+    const Comp = ({ headers, body }: TableProps) => (
         <Grid>
             <Header>
                 {headers.map((header, index) => (
