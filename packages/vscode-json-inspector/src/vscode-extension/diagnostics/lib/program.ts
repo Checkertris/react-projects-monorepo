@@ -52,9 +52,11 @@ export class Program {
     }
 
     private getDefaultExportNode(source: ts.SourceFile) {
+        let exportNode
         return ts.forEachChild(source, (node) => {
-            if (this.isDefaultExportAssignment(node)) return node
-            if (this.isDefaultExportDeclaration(node)) return node
+            if (this.isDefaultExportAssignment(node)) exportNode = node
+            if (this.isDefaultExportDeclaration(node)) exportNode = node
         })
+        return exportNode
     }
 }

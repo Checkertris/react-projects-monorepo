@@ -3,7 +3,6 @@ import { commands, ExtensionContext, Uri, window, workspace } from 'vscode'
 import { ExtensionHandle } from '~/vscode-extension'
 import { setServiceFolderCommand } from './json-inspector/setRefFolderCommand'
 import { HomeViewProvider } from './json-inspector/homeViewProvider'
-import { jsonInspectorProjectDiagnostics } from './json-inspector/diagnostics/jsonInspectorDiagnostics'
 
 export function activate(context: ExtensionContext) {
     JsonInspectorHandle.activate(context)
@@ -14,7 +13,6 @@ export class JsonInspectorHandle extends ExtensionHandle {
         ExtensionHandle.activate(context)
         this.registerCommand(setServiceFolderCommand)
         this.registerWebviewProvider(HomeViewProvider)
-        this.registerDiagnosticCollection(jsonInspectorProjectDiagnostics)
     }
     public static getServiceFolderUri(): Uri | undefined {
         const uri: Uri | undefined = this.context().workspaceState.get(SERVICE_FOLDER_URI_STATE)
