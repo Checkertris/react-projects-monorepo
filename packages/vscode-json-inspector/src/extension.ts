@@ -6,20 +6,11 @@ import { HomeViewProvider } from './extensions/webview'
 import { setServiceFolderCommand } from './extensions/setServiceFolderCommand'
 
 export function activate(context: ExtensionContext) {
-    Extension.activate(context)
+    const commands = new CommandHandle(context)
+    commands.register(setServiceFolderCommand)
+
+    const workspace = new ExtensionWorkspaceStateHandle(context)
+    const webview = new ExtensionWebviewHandle(workspace, context)
+    webview.registerWebviewProvider(HomeViewProvider)
 }
 
-export class Extension {
-    static commands: CommandHandle
-    static workspaceState: ExtensionWorkspaceStateHandle
-    static webview: ExtensionWebviewHandle
-
-    static activate(context: ExtensionContext) {
-        this.commands = new CommandHandle(context)
-        this.workspaceState = new ExtensionWorkspaceStateHandle(context)
-        this.webview = new ExtensionWebviewHandle(this.workspaceState, context)
-
-        this.webview.registerWebviewProvider(HomeViewProvider)
-        this.commands.register(setServiceFolderCommand)
-    }
-}

@@ -10,6 +10,7 @@ export class HomeViewProvider extends BaseWebviewProvider<ExtensionWebviewMessag
         messageEmitter: WebviewMessageEmitter<ExtensionWebviewMessage>,
         context: ExtensionContext
     ) {
+        console.log('🚀 ~ HomeViewProvider ~ messageEmitter:', messageEmitter)
         super(HOME_VIEW, VIEW_INDEX, messageEmitter, context)
     }
 

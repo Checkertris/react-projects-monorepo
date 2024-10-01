@@ -34,6 +34,6 @@ export const setServiceFolderCommand = new CommandSchema(
                     })
                 })
             }
-        )
+        ).show({})
     }
 )
