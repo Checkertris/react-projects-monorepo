@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { isExtends } from '@common/utils';
-export function useAsycOptions(loadingIcon, options) {
+export function useAsyncOptions(loadingIcon, options) {
     const [currentOptions, setOptions] = useState([]);
     const refresh = useRef(async () => {
         setOptions(options.map((option) => {

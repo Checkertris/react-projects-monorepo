@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { flatten } from './transform'
-import { seperate } from './string'
+import { separate } from './string'
 
 interface ReadDirectoryOptions {
     ignore?: string[]
@@ -10,7 +10,7 @@ interface ReadDirectoryOptions {
 
 function readDirectory(root: string, options?: ReadDirectoryOptions) {
     const filter = (file: string) =>
-        !new RegExp(seperate(options?.ignore ? options.ignore : [], '|')).test(file)
+        !new RegExp(separate(options?.ignore ? options.ignore : [], '|')).test(file)
     let dirs = fs.readdirSync(root).filter(filter)
     if (options?.type === 'file') dirs = dirs.filter((path) => fs.statSync(path).isFile())
     if (options?.type === 'folder') dirs = dirs.filter((path) => fs.statSync(path).isDirectory())

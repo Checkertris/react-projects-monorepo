@@ -1,5 +1,5 @@
-import { seperate } from './seperate';
+import { separate } from './separate';
 export const formatText = (str) => {
-    return seperate(str.split('_').map((word) => word.charAt(0).toUpperCase() + word.slice(1)), ' ');
+    return separate(str.split('_').map((word) => word.charAt(0).toUpperCase() + word.slice(1)), ' ');
 };
 //# sourceMappingURL=formatText.js.map

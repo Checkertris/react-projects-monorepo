@@ -92,3 +92,5 @@ export type Merge<U extends object> = (U extends unknown ? (K: U) => void : neve
 ) => void
     ? I
     : never
+
+export const __brand = Symbol()

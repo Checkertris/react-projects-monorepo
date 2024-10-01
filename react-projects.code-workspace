@@ -8,5 +8,6 @@
 			"name": "📦 vscode-json-inspector",
 			"path": "packages/vscode-json-inspector"
 		}
-	]
+	],
+	"settings": {}
 }

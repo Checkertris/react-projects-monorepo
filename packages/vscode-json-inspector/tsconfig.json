@@ -2,11 +2,12 @@
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "moduleResolution": "node",
-        "verbatimModuleSyntax": false,
+        "module": "ES2022",
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
-            "~/*": ["src/*"]
+            "~/*": ["src/*"],
+            "shared/*": ["shared/*"]
         }
     },
     "include": ["src/**/*.ts", "src/**/*.tsx", "shared/**/*.ts"],

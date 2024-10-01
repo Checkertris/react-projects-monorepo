@@ -1,2 +1,2 @@
-export * from './seperate'
+export * from './separate'
 export * from './formatText'

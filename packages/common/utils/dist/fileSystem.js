@@ -1,8 +1,8 @@
 import fs from 'fs';
 import { flatten } from './transform';
-import { seperate } from './string';
+import { separate } from './string';
 function readDirectory(root, options) {
-    const filter = (file) => !new RegExp(seperate(options?.ignore ? options.ignore : [], '|')).test(file);
+    const filter = (file) => !new RegExp(separate(options?.ignore ? options.ignore : [], '|')).test(file);
     let dirs = fs.readdirSync(root).filter(filter);
     if (options?.type === 'file')
         dirs = dirs.filter((path) => fs.statSync(path).isFile());

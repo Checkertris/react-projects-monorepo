@@ -1,5 +1,5 @@
-import type { OptionData, AsynchOptions } from '~/types';
-export declare function useAsycOptions<T extends PropertyKey>(loadingIcon: JSX.Element, options: (OptionData<T> | AsynchOptions<T>)[]): {
+import type { OptionData, AsyncOptions } from '~/types';
+export declare function useAsyncOptions<T extends PropertyKey>(loadingIcon: JSX.Element, options: (OptionData<T> | AsyncOptions<T>)[]): {
     options: OptionData<T>[];
     onClick: () => void;
 };

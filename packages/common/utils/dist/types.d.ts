@@ -21,9 +21,7 @@ export type ArrayValue<T extends unknown[]> = T extends Array<infer A> ? A : nev
 type LengthObject<T, K extends keyof T = keyof T> = [K] extends [never] ? [] : K extends K ? [0, ...LengthObject<Omit<T, K>>] : never;
 export type RecordLength<T extends Record<PropertyKey, unknown>> = Extract<LengthObject<T>['length'], number>;
 export type ArrayLength<T extends unknown[]> = T['length'];
-export type Expand<T extends object> = {
-    [K in keyof T]: T[K];
-} & {};
 export type Merge<U extends object> = (U extends unknown ? (K: U) => void : never) extends (K: infer I) => void ? I : never;
+export declare const __brand: unique symbol;
 export {};
 //# sourceMappingURL=types.d.ts.map

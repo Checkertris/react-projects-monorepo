@@ -4,5 +4,16 @@
         "dist": true,
         "package-lock.json": true,
         "tsconfig.tsbuildinfo": true
-    }
+    },
+    "cSpell.words": [
+        "clsx",
+        "codicon",
+        "Gitignores",
+        "hookform",
+        "isequal",
+        "outfile",
+        "quickpick",
+        "vscodeignore",
+        "Webviews"
+    ]
 }

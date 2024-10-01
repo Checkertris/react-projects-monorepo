@@ -22,7 +22,7 @@ export type OptionData<T extends PropertyKey = PropertyKey> = {
     value: T;
     icon?: JSX.Element | undefined;
 } | 'divider';
-export interface BaseSelectProps<T extends PropertyKey, O extends AsynchOptions<T> | OptionData<T>> extends FormFieldProps<T> {
+export interface BaseSelectProps<T extends PropertyKey, O extends AsyncOptions<T> | OptionData<T>> extends FormFieldProps<T> {
     placeholder?: string | undefined;
     emptyMessage?: string | undefined;
     options: O[];
@@ -36,8 +36,8 @@ export interface SelectOptionProps {
     key: string;
 }
 export type SelectProps<T extends PropertyKey> = BaseSelectProps<T, OptionData<T>>;
-export type AsyncSelectProps<T extends PropertyKey> = BaseSelectProps<T, OptionData<T> | AsynchOptions<T>>;
-export interface AsynchOptions<T extends PropertyKey = PropertyKey> {
+export type AsyncSelectProps<T extends PropertyKey> = BaseSelectProps<T, OptionData<T> | AsyncOptions<T>>;
+export interface AsyncOptions<T extends PropertyKey = PropertyKey> {
     fetch: () => Promise<OptionData<T>[]>;
 }
 export interface TableProps {

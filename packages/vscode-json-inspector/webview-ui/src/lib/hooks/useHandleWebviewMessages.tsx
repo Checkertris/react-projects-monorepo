@@ -1,29 +1,51 @@
-import { useEffect, useRef } from 'react'
-import { vscodeWebviewApi } from '../utils/vscodeAPIWrapper'
-import { APP_READY_MESSAGE, Origin, SET_APP_INDEX_MESSAGE, type Message } from '../../../../shared'
+// import { useEffect, useState } from 'react'
+// import { vscodeWebviewApi } from '~/lib/utils/vscodeAPIWrapper'
+// import {
+//     APP_READY,
+//     MessageAction,
+//     type Message,
+//     type WebviewMessageEvent,
+// } from '../../../../src/lib'
 
-export const useHandleWebviewMessages = (listener: (data: Message) => void = () => {}) => {
-    const viewIndexRef = useRef<string | never>()
-    const eventListener = (event: MessageEvent<Message>) => {
-        if (event.data.type === SET_APP_INDEX_MESSAGE)
-            viewIndexRef.current = event.data.data as string
-        listener(event.data)
-    }
+// type WebviewState<T extends Message> = {
+//     [K in Extract<T, { action: MessageAction.SET_STATE }> as K['type']]: K['data']
+// }
 
-    useEffect(() => {
-        postMessage(APP_READY_MESSAGE)
-        window.addEventListener('message', eventListener)
-        return () => {
-            window.removeEventListener('message', eventListener)
-        }
-    }, [])
+// export function useHandleWebviewMessages<T extends Message>(
+//     listener?: (message: WebviewMessageEvent<T>) => void
+// ) {
+//     const [state, setState] = useState<Partial<WebviewState<T>>>(vscodeWebviewApi.getState())
 
-    function postMessage(type: string, data?: unknown) {
-        vscodeWebviewApi.postMessage({
-            origin: { type: Origin.WebviewApp, id: viewIndexRef.current },
-            type,
-            data,
-        })
-    }
-    return { postMessage }
-}
+//     const eventListener = (message: MessageEvent<WebviewMessageEvent<T>>) => {
+//         if (message.data.message.action == MessageAction.SET_STATE) {
+//             const newState = {
+//                 ...vscodeWebviewApi.getState(),
+//                 [message.data.message.type]: message.data.message.data,
+//             }
+
+//             vscodeWebviewApi.setState(newState)
+//             setState(newState)
+//         }
+//         if (listener) listener(message.data)
+//     }
+
+//     useEffect(() => {
+//         vscodeWebviewApi.postMessage({
+//             type: APP_READY,
+//             action: MessageAction.EMIT,
+//             data: vscodeWebviewApi.getState(),
+//         })
+
+//         window.addEventListener('message', eventListener)
+
+//         return () => {
+//             window.removeEventListener('message', eventListener)
+//         }
+//     }, [])
+
+//     function postMessage(message: T) {
+//         vscodeWebviewApi.postMessage(message)
+//     }
+
+//     return { state, postMessage }
+// }

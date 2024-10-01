@@ -10,6 +10,15 @@
             "path": "packages/vscode-json-inspector",
             "problemMatcher": ["$esbuild-watch", "$tsc-watch"],
             "isBackground": true
+        },
+        {
+            "type": "npm",
+            "script": "compile",
+            "path": "packages/vscode-json-inspector",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "npm: compile - packages/vscode-json-inspector",
+            "detail": "npm run check-types && node esbuild.js "
         }
     ]
 }

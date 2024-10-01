@@ -1,5 +1,4 @@
 import { VSCodeButton } from '@vscode/webview-ui-toolkit/react'
-import { cn } from '~/lib/utils/cn'
 
 interface VSCodeCommandButtonProps {
     readonly command_id: string

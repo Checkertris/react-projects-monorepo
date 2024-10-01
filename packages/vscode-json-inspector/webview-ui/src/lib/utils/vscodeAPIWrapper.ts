@@ -43,9 +43,9 @@ class VSCodeAPIWrapper {
      *
      * @return The current state or `undefined` if no state has been set.
      */
-    public getState(): unknown | undefined {
+    public getState() {
         if (this.vsCodeApi) {
-            return this.vsCodeApi.getState()
+            return (this.vsCodeApi.getState() || {}) as { [K in string]: unknown }
         } else {
             const state = localStorage.getItem('vscodeState')
             return state ? JSON.parse(state) : undefined
@@ -63,7 +63,7 @@ class VSCodeAPIWrapper {
      *
      * @return The new state.
      */
-    public setState<T extends unknown | undefined>(newState: T): T {
+    public setState<T extends { [K in string]: unknown }>(newState: T): T {
         if (this.vsCodeApi) {
             return this.vsCodeApi.setState(newState)
         } else {

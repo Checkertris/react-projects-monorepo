@@ -1,27 +1,25 @@
-import { SERVICE_FOLDER_URI_STATE } from 'shared'
-import { commands, ExtensionContext, Uri, window, workspace } from 'vscode'
-import { ExtensionHandle } from '~/vscode-extension'
-import { setServiceFolderCommand } from './json-inspector/setRefFolderCommand'
-import { HomeViewProvider } from './json-inspector/homeViewProvider'
+import { type ExtensionContext } from 'vscode'
+import { CommandHandle } from './lib'
+import { ExtensionWorkspaceStateHandle } from './extensions/extensionWorkspacesStateHandle'
+import { ExtensionWebviewHandle } from './extensions/webview/extensionWebviewHandle'
+import { HomeViewProvider } from './extensions/webview'
+import { setServiceFolderCommand } from './extensions/setServiceFolderCommand'
 
 export function activate(context: ExtensionContext) {
-    JsonInspectorHandle.activate(context)
+    Extension.activate(context)
 }
 
-export class JsonInspectorHandle extends ExtensionHandle {
-    public static override activate(context: ExtensionContext) {
-        ExtensionHandle.activate(context)
-        this.registerCommand(setServiceFolderCommand)
-        this.registerWebviewProvider(HomeViewProvider)
-    }
-    public static getServiceFolderUri(): Uri | undefined {
-        const uri: Uri | undefined = this.context().workspaceState.get(SERVICE_FOLDER_URI_STATE)
-        if (uri) return uri
-        if (workspace.workspaceFolders) return workspace.workspaceFolders[0]?.uri
-        return undefined
-    }
+export class Extension {
+    static commands: CommandHandle
+    static workspaceState: ExtensionWorkspaceStateHandle
+    static webview: ExtensionWebviewHandle
 
-    public static setServiceFolderUri(uri: Uri) {
-        this.context().workspaceState.update(SERVICE_FOLDER_URI_STATE, uri)
+    static activate(context: ExtensionContext) {
+        this.commands = new CommandHandle(context)
+        this.workspaceState = new ExtensionWorkspaceStateHandle(context)
+        this.webview = new ExtensionWebviewHandle(this.workspaceState, context)
+
+        this.webview.registerWebviewProvider(HomeViewProvider)
+        this.commands.register(setServiceFolderCommand)
     }
 }
