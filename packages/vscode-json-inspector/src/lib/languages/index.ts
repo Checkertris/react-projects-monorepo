@@ -1,3 +1,2 @@
-export * from './diagnosticCollectionSchema'
-export * from './viewers'
-export * from './languagesHandle'
+export * from './diagnosticCollections'
+export * from './defaultExportChecker'

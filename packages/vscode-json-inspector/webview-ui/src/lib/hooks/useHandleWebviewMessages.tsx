@@ -1,51 +1,40 @@
-// import { useEffect, useState } from 'react'
-// import { vscodeWebviewApi } from '~/lib/utils/vscodeAPIWrapper'
-// import {
-//     APP_READY,
-//     MessageAction,
-//     type Message,
-//     type WebviewMessageEvent,
-// } from '../../../../src/lib'
+import { useEffect, useState } from 'react'
+import { vscodeWebviewApi } from '~/lib/utils/vscodeAPIWrapper'
+import { APP_READY, MessageAction, type DefaultWebviewMessage, type Message } from 'shared'
 
-// type WebviewState<T extends Message> = {
-//     [K in Extract<T, { action: MessageAction.SET_STATE }> as K['type']]: K['data']
-// }
+type WebviewState<T extends Message> = {
+    [K in Extract<T, { action: MessageAction.SetState }> as K['type']]: K['data']
+}
 
-// export function useHandleWebviewMessages<T extends Message>(
-//     listener?: (message: WebviewMessageEvent<T>) => void
-// ) {
-//     const [state, setState] = useState<Partial<WebviewState<T>>>(vscodeWebviewApi.getState())
+export function useHandleWebviewMessages<T extends Message>(
+    listener?: (message: T | DefaultWebviewMessage) => void
+) {
+    const [state, setState] = useState<Partial<WebviewState<T>>>(vscodeWebviewApi.getState())
 
-//     const eventListener = (message: MessageEvent<WebviewMessageEvent<T>>) => {
-//         if (message.data.message.action == MessageAction.SET_STATE) {
-//             const newState = {
-//                 ...vscodeWebviewApi.getState(),
-//                 [message.data.message.type]: message.data.message.data,
-//             }
+    const eventListener = (message: MessageEvent<T | DefaultWebviewMessage>) => {
+        if (message.data.action == MessageAction.SetState) {
+            const newState = {
+                ...vscodeWebviewApi.getState(),
+                [message.type]: message.data,
+            }
+            vscodeWebviewApi.setState(newState)
+            setState(newState)
+        }
+        if (listener) listener(message.data)
+    }
 
-//             vscodeWebviewApi.setState(newState)
-//             setState(newState)
-//         }
-//         if (listener) listener(message.data)
-//     }
+    useEffect(() => {
+        vscodeWebviewApi.postMessage({
+            type: APP_READY,
+            data: vscodeWebviewApi.getState(),
+        })
 
-//     useEffect(() => {
-//         vscodeWebviewApi.postMessage({
-//             type: APP_READY,
-//             action: MessageAction.EMIT,
-//             data: vscodeWebviewApi.getState(),
-//         })
+        window.addEventListener('message', eventListener)
 
-//         window.addEventListener('message', eventListener)
+        return () => {
+            window.removeEventListener('message', eventListener)
+        }
+    }, [])
 
-//         return () => {
-//             window.removeEventListener('message', eventListener)
-//         }
-//     }, [])
-
-//     function postMessage(message: T) {
-//         vscodeWebviewApi.postMessage(message)
-//     }
-
-//     return { state, postMessage }
-// }
+    return { state, postMessage: (message: T) => vscodeWebviewApi.postMessage(message) }
+}

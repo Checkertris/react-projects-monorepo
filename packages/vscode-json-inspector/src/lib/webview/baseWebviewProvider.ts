@@ -1,4 +1,4 @@
-import { BaseWebview } from './baseWebview'
+import { BaseWebviewContainer } from './baseWebviewContainer'
 import {
     Disposable,
     type CancellationToken,
@@ -7,20 +7,13 @@ import {
     type WebviewViewProvider,
     type WebviewViewResolveContext,
 } from 'vscode'
-import type { WebviewMessageEmitter } from './webviewMessageEmitter'
-import { MessageSource, type Message } from '../misc'
 
-export abstract class BaseWebviewProvider<T extends Message>
-    extends BaseWebview<T>
+export abstract class BaseWebviewProvider<T extends { type: string; data?: unknown }>
+    extends BaseWebviewContainer<T>
     implements WebviewViewProvider
 {
-    constructor(
-        public readonly contribute_id: string,
-        view_index: string,
-        messageEmitter: WebviewMessageEmitter<T>,
-        context: ExtensionContext
-    ) {
-        super(MessageSource.WEBVIEW_VIEW, view_index, messageEmitter, context)
+    constructor(view_index: string, context: ExtensionContext) {
+        super(view_index, context)
     }
 
     public resolveWebviewView(
@@ -33,11 +26,13 @@ export abstract class BaseWebviewProvider<T extends Message>
             enableCommandUris: true,
         }
 
-        const disposables: Disposable[] = []
-        webviewView.onDidDispose(() => Disposable.from(...disposables).dispose())
-        disposables.push(this.startWebview(webviewView.webview))
-        disposables.concat(this.startWebviewView(webviewView)!)
+        webviewView.onDidDispose(() =>
+            Disposable.from(
+                ...this.startWebviewView(webviewView),
+                this.startWebview(webviewView.webview)
+            ).dispose()
+        )
     }
 
-    abstract startWebviewView(webviewView: WebviewView): Disposable[] | Disposable | void
+    abstract startWebviewView(webviewView: WebviewView): Disposable[]
 }

@@ -1,63 +1,64 @@
 import ts from 'typescript'
 import { Range, Uri } from 'vscode'
+import { Handle } from '../handle'
 
 export class Program {
-    private _program: ts.Program = ts.createProgram([], {})
-    private _checker: ts.TypeChecker = this._program.getTypeChecker()
-    uris: Uri[] = []
+    public readonly program: ts.Program
+    private readonly checker: ts.TypeChecker
 
     constructor(...uris: Uri[]) {
-        this.updateInternal(uris)
-    }
-
-    update(uri: Uri) {
-        this.updateInternal([uri])
-    }
-
-    checker() {
-        return this._checker
-    }
-
-    getDefaultExport(uri: Uri) {
-        const node = this.getDefaultExportNode(uri)
-        const type = this.getType(node!)
-        return { node, type }
-    }
-
-    private updateInternal(uris: Uri[]) {
-        this.uris = this.uris.concat(uris)
-        this._program = ts.createProgram(
-            this.uris.map((file) => file.path),
+        this.program = ts.createProgram(
+            uris.map((file) => file.path),
             { allowJs: true }
         )
-        this._checker = this._program.getTypeChecker()
+        this.checker = this.program.getTypeChecker()
     }
 
-    private getType(node: ts.Node): ts.Type | undefined {
-        if (ts.isIdentifier(node)) return this._checker.getTypeAtLocation(node)
-        return node.forEachChild((child) => {
-            return this.getType(child)
+    public export(name: string, uri: Uri) {
+        let results: ts.Node | undefined
+        ts.forEachChild(this.sourceFile(uri), (node) => {
+            if (node.getFullText().includes('export')) {
+                const type = this.checker.getTypeAtLocation(node)
+                if (name == this.checker.typeToString(type)) results = node
+            }
         })
+        if (!results) throw Handle.logError('no export', name, uri)
+        return results
     }
 
-    private getSourceFile(uri: Uri) {
-        const source = this._program.getSourceFile(uri.path)
-        if (!source) throw ReferenceError('⚠️ no source file found in uri')
-        return source
-    }
-
-    private getDefaultExportNode(uri: Uri) {
-        let targetNode
-        return ts.forEachChild(this.getSourceFile(uri), (node) => {
-            if (node.getFullText().includes('default')) targetNode = node
+    public defaultExport(uri: Uri) {
+        let results: ts.Node | undefined
+        ts.forEachChild(this.sourceFile(uri), (node) => {
+            if (node.getFullText().includes('default')) results = node
         })
-        return targetNode
+        if (!results) Handle.logError('no default export', uri)
+        return results
     }
 
-    public getRange(uri: Uri, node: ts.Node) {
-        const sourceFile = this.getSourceFile(uri)
+    public areAssignable(type1: ts.Type, type2: ts.Type) {
+        return this.checker.isTypeAssignableTo(type1, type2)
+    }
+
+    public typeToString(type: ts.Type) {
+        return this.checker.typeToString(type)
+    }
+
+    public getType(node: ts.Node) {
+        const type = this.checker.getTypeAtLocation(node)
+        if (!type) throw Handle.logError('no type in node', node)
+        return type
+    }
+
+    public range(uri: Uri, node: ts.Node) {
+        const sourceFile = this.sourceFile(uri)
         const start = ts.getLineAndCharacterOfPosition(sourceFile, node.getStart(sourceFile, true))
         const end = ts.getLineAndCharacterOfPosition(sourceFile, node.getEnd())
         return new Range(start.line, start.character, end.line, end.character)
+    }
+
+    private sourceFile(uri: Uri) {
+        const source = this.program.getSourceFile(uri.path)
+        if (!source) throw Handle.logError('no source file', uri)
+        return source
     }
 }

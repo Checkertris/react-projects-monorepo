@@ -6,13 +6,17 @@
         "tsconfig.tsbuildinfo": true
     },
     "cSpell.words": [
+        "atleastone",
         "clsx",
         "codicon",
+        "enumme",
         "Gitignores",
         "hookform",
+        "initialise",
         "isequal",
         "outfile",
         "quickpick",
+        "tseslint",
         "vscodeignore",
         "Webviews"
     ]

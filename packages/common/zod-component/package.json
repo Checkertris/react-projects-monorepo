@@ -1,0 +1,17 @@
+{
+    "name": "@common/zod-component",
+    "version": "1.0.0",
+    "main": "dist/index.js",
+    "private": true,
+    "scripts": {
+        "build": "tsc --build"
+    },
+    "peerDependencies": {
+        "@common/components": "^1.0.0",
+        "@common/utils": "^1.0.0",
+        "@hookform/resolvers": "^3.9.0",
+        "class-variance-authority": "^0.7.0",
+        "react-hook-form": "^7.53.0",
+        "zod": "^3.23.8"
+    }
+}

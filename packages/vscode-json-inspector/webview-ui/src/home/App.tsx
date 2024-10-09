@@ -1,13 +1,12 @@
-import { CommandButton } from '~/lib/ui/components/commandButton'
 import '../codicon.css'
 import './App.css'
-import { SET_SERVICE_FOLDER_COMMAND, type ExtensionWebviewMessage } from '../../../src/extensions'
 
 function App() {
     // const { state } = useHandleWebviewMessages<ExtensionWebviewMessage>()
 
     return (
         <div>
+            HELLO!
             {/* {!state.has_workspace && (
                 <>
                     <p>No Workspace detected, open a folder to get started.</p>

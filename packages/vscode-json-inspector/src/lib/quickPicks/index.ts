@@ -1,1 +1,1 @@
-export * from './quickPicks'
+export * from './methods'
